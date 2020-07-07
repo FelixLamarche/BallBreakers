@@ -9,8 +9,6 @@ public class Ball : MonoBehaviour
 
     private Paddle currentPaddle;
     private Vector3 paddleBallOffset;
-    private float maxYPosition;
-    private float minYPosition;
 
     private bool isMoving;
     private bool isFollowingPaddle;
@@ -20,11 +18,6 @@ public class Ball : MonoBehaviour
     {
         isMoving = false;
         currentSpeed = Vector3.zero;
-    }
-
-    private void Start()
-    {
-        SetYBoundaries();
     }
 
     private void Update()
@@ -41,15 +34,15 @@ public class Ball : MonoBehaviour
         {
             float xPos = transform.position.x + currentSpeed.x * Time.fixedDeltaTime;
             float yPos = transform.position.y + currentSpeed.y * Time.fixedDeltaTime;
-            if(yPos >= maxYPosition || yPos <= minYPosition)
-            {
-                HitWall();
-            }
-
-            yPos = Mathf.Clamp(yPos, minYPosition, maxYPosition);
 
             transform.position = new Vector3(xPos, yPos, transform.position.z);
         }
+    }
+
+    public void Stop()
+    {
+        isMoving = false;
+        currentSpeed = Vector3.zero;
     }
 
     public void StartFollowPaddle(Paddle paddle, Vector3 offset)
@@ -81,13 +74,6 @@ public class Ball : MonoBehaviour
         currentSpeed += velocity;
     }
 
-    private void SetYBoundaries()
-    {
-        float modelVerticalSize = GetComponent<Collider>().bounds.size.y;
-        maxYPosition = LevelManager.instance.MaxYPosition - modelVerticalSize / 2;
-        minYPosition = LevelManager.instance.MinYPosition + modelVerticalSize / 2;
-    }
-
     private void OnCollisionEnter(Collision collision)
     {
         // When hitting paddle, reverse x
@@ -95,6 +81,10 @@ public class Ball : MonoBehaviour
         if(paddleHit != null)
         {
             HorizontalHit(paddleHit.WorldVelocity);
+        }
+        else if(collision.gameObject.tag == "Wall")
+        {
+            HitWall();
         }
     }
 }

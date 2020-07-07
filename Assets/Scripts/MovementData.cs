@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+// Gets data on the gameObject's position and speed
 public class MovementData : MonoBehaviour
 {
     private Vector3 lastFixedFramePosition;
