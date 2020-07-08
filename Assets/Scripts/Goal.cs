@@ -9,8 +9,7 @@ public class Goal : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         // If a ball enters the goal
-        Ball ball = other.GetComponent<Ball>();
-        if (ball)
+        if (other.gameObject.layer == LayerManager.Ball)
         {
             // line works if there are two sides in PaddleSide
             PaddleSide scorerSide = (PaddleSide) (((int) goalSide + 1) % 2);

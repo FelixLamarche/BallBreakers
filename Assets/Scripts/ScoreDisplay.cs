@@ -15,6 +15,8 @@ public class ScoreDisplay : MonoBehaviour
     public void Start()
     {
         GameplayManager.LevelManager.ScoreChanged += UpdateScoreTexts;
+        // Update the text to be accurate
+        UpdateScoreTexts(this, EventArgs.Empty);
     }
 
     public void UpdateScoreTexts(object sender, EventArgs e)

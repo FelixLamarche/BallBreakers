@@ -33,7 +33,7 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
-        OnScoreChanged();
+
     }
 
     public void GoalScored(PaddleSide sideWhoScored)

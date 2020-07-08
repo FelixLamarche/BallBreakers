@@ -71,9 +71,10 @@ public class Paddle : MonoBehaviour
         }
     }
 
+    // Still iffy and should be done well
     public void MovePaddleVertically(float vertical)
     {
-        float deltaYPos = vertical * Speed * Time.fixedDeltaTime;
+        float deltaYPos = vertical * Speed;
 
         transform.Translate(Vector3.up * deltaYPos);
         //transform.position = new Vector3(transform.position.x, yPos, transform.position.z);

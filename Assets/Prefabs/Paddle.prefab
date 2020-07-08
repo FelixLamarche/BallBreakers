@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7980354905949980680}
   - component: {fileID: 8746225046337611089}
   - component: {fileID: 1751206167213158629}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Paddle
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -77,7 +77,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 122
-  m_CollisionDetection: 3
+  m_CollisionDetection: 0
 --- !u!114 &8746225046337611089
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -113,7 +113,7 @@ GameObject:
   - component: {fileID: 8882924100824970966}
   - component: {fileID: 8882924100824970971}
   - component: {fileID: 8882924100824970964}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}

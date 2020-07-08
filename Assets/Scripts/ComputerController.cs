@@ -6,6 +6,8 @@ using UnityEngine;
 [RequireComponent(typeof(Paddle))]
 public class ComputerController : MonoBehaviour
 {
+    [SerializeField] private bool isFollowingBall = false;
+
     private Paddle paddle;
     private Ball ball;
 
@@ -16,12 +18,16 @@ public class ComputerController : MonoBehaviour
 
     private void Start()
     {
-        GetBall();
+        GetBallReference();
     }
 
     private void Update()
     {
-        FollowBall();
+        if (isFollowingBall)
+        {
+            FollowBall();
+        }
+
         if (paddle.IsBallHeld)
         {
             paddle.ShootBall();
@@ -34,12 +40,12 @@ public class ComputerController : MonoBehaviour
         transform.position = new Vector3(transform.position.x, newYPos, transform.position.z);
     }
 
-    private void GetBall()
+    private void GetBallReference()
     {
         ball = FindObjectOfType<Ball>();
         if(ball == null)
         {
-            Debug.LogError("Ball not found for CPU padldle :" + gameObject.name);
+            Debug.LogError("Ball not found for CPU paddle :" + gameObject.name);
         }
     }
 }

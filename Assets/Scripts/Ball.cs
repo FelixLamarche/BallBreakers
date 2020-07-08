@@ -24,9 +24,10 @@ public class Ball : MonoBehaviour
     {
         if (isFollowingPaddle)
         {
-            transform.position = currentPaddle.transform.position + paddleBallOffset;
+            FollowPaddle();
         }
     }
+
 
     private void FixedUpdate()
     {
@@ -39,6 +40,19 @@ public class Ball : MonoBehaviour
         }
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        // When hitting paddle, reverse x
+        Paddle paddleHit = collision.gameObject.GetComponent<Paddle>();
+        if (paddleHit != null)
+        {
+            HorizontalHit(paddleHit.WorldVelocity);
+        }
+        else if (collision.gameObject.layer == LayerManager.Wall)
+        {
+            HitWall();
+        }
+    }
     public void Stop()
     {
         isMoving = false;
@@ -51,6 +65,8 @@ public class Ball : MonoBehaviour
         isFollowingPaddle = true;
         currentPaddle = paddle;
         paddleBallOffset = offset;
+
+        FollowPaddle();
     }
 
     public void Shoot(Vector3 throwerSpeed, Vector3 direction)
@@ -61,12 +77,14 @@ public class Ball : MonoBehaviour
         currentSpeed = direction * initialHorizontalSpeed + throwerSpeed;
     }
 
+    // TO REDO
     public void HitWall()
     {
         // Reverse y speed vector
         currentSpeed.y *= -1;
     }
 
+    // TO REDO
     public void HorizontalHit(Vector3 velocity)
     {
         // Reverse x speed vector
@@ -74,17 +92,8 @@ public class Ball : MonoBehaviour
         currentSpeed += velocity;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void FollowPaddle()
     {
-        // When hitting paddle, reverse x
-        Paddle paddleHit = collision.gameObject.GetComponent<Paddle>();
-        if(paddleHit != null)
-        {
-            HorizontalHit(paddleHit.WorldVelocity);
-        }
-        else if(collision.gameObject.tag == "Wall")
-        {
-            HitWall();
-        }
+        transform.position = currentPaddle.transform.position + paddleBallOffset;
     }
 }
