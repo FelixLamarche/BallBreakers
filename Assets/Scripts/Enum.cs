@@ -1,5 +1,7 @@
-﻿public enum PaddleSide
+﻿public enum Side
 {
+    Up,
+    Right,
     Left,
-    Right
+    Down
 }

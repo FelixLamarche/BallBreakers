@@ -31,23 +31,27 @@ public class LevelManager : MonoBehaviour
         SetLevel();
     }
 
-    private void Start()
+    private void Update()
     {
-
+        // FOR TEST ONLY
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            SetRound(Side.Left);
+        }
     }
 
-    public void GoalScored(PaddleSide sideWhoScored)
+    public void GoalScored(Side sideWhoScored)
     {
-        PaddleSide paddleWhoLost = PaddleSide.Left;
+        Side paddleWhoLost = Side.Left;
 
-        if (sideWhoScored == PaddleSide.Left)
+        if (sideWhoScored == Side.Left)
         {
-            paddleWhoLost = PaddleSide.Right;
+            paddleWhoLost = Side.Right;
             LeftPaddleScore++;
         }
-        else if(sideWhoScored == PaddleSide.Right)
+        else if(sideWhoScored == Side.Right)
         {
-            paddleWhoLost = PaddleSide.Left;
+            paddleWhoLost = Side.Left;
             RightPaddleScore++;
         }
         OnScoreChanged();
@@ -55,29 +59,32 @@ public class LevelManager : MonoBehaviour
         SetRound(paddleWhoLost);
     }
 
-    private void SetRound(PaddleSide sideWithBall)
+    private void SetRound(Side sideWithBall)
     {
         Paddle ballHolderPaddle = null;
 
-        if (sideWithBall == PaddleSide.Left)
+        if (sideWithBall == Side.Left)
         {
             ballHolderPaddle = leftPaddle;
         }
-        else if(sideWithBall == PaddleSide.Right)
+        else if(sideWithBall == Side.Right)
         {
             ballHolderPaddle = rightPaddle;
         }
+
+        leftPaddle.transform.position = leftPaddleStartTransform.position;
+        rightPaddle.transform.position = rightPaddleStartTransform.position;
 
         GiveBall(ballHolderPaddle);
     }
 
     private void SetLevel()
     {
-        leftPaddle = CreatePaddle(PaddleSide.Left);
-        rightPaddle = CreatePaddle(PaddleSide.Right);
+        leftPaddle = CreatePaddle(Side.Left);
+        rightPaddle = CreatePaddle(Side.Right);
         ball = CreateBall();
 
-        SetRound(PaddleSide.Left);
+        SetRound(Side.Left);
     }
 
     private void GiveBall(Paddle paddle)
@@ -86,13 +93,13 @@ public class LevelManager : MonoBehaviour
         paddle.SetHeldBall(ball);
     }
 
-    private Paddle CreatePaddle(PaddleSide paddleSide)
+    private Paddle CreatePaddle(Side paddleSide)
     {
         Vector3 startingPosition;
         string objectName;
         bool isPlayer = false;
 
-        if(paddleSide == PaddleSide.Left)
+        if(paddleSide == Side.Left)
         {
             objectName = "LeftPaddle";
             isPlayer = true;

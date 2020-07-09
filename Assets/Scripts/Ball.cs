@@ -50,6 +50,7 @@ public class Ball : MonoBehaviour
         }
         else if (collision.gameObject.layer == LayerManager.Wall)
         {
+            Debug.Log("HIT");
             HitWall();
         }
     }

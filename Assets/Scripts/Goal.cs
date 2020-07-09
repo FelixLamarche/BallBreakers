@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class Goal : MonoBehaviour
 {
-    [SerializeField] private PaddleSide goalSide = PaddleSide.Left;
+    [SerializeField] private Side goalSide = Side.Left;
 
     private void OnTriggerEnter(Collider other)
     {
         // If a ball enters the goal
         if (other.gameObject.layer == LayerManager.Ball)
         {
-            // line works if there are two sides in PaddleSide
-            PaddleSide scorerSide = (PaddleSide) (((int) goalSide + 1) % 2);
+            // Only works with two goals on these sides
+            Side scorerSide = goalSide == Side.Left ? Side.Left : Side.Right;
             GameplayManager.LevelManager.GoalScored(scorerSide);
         }
     }

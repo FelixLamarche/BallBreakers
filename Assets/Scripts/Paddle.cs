@@ -10,10 +10,11 @@ public class Paddle : MonoBehaviour
     private Vector3 ballHeldOffset = Vector3.right;
 
     private MovementData movementData;
+    private Collider myCollider;
 
     private Ball heldBall;
 
-    public PaddleSide PaddleSide
+    public Side PaddleSide
     {
         get; private set;
     }
@@ -34,13 +35,42 @@ public class Paddle : MonoBehaviour
 
     private void Awake()
     {
+        myCollider = GetComponent<Collider>();
         movementData = GetComponent<MovementData>();
     }
 
-    public void SetPaddle(PaddleSide startingSide)
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.collider.gameObject.layer == LayerManager.Wall)
+        {
+            ContactPoint contactPoint = collision.GetContact(0);
+            Wall wallComponent = contactPoint.otherCollider.GetComponent<Wall>();
+            DontEnterCollider(contactPoint, wallComponent.Normal);
+        }
+    }
+
+    private void DontEnterCollider(ContactPoint contactPoint, Vector3 normal)
+    {
+        Vector3 toTranslate = normal * (-1 * contactPoint.separation);
+        transform.Translate(toTranslate);
+    }
+    private void DontEnterCollider(ContactPoint contactPoint)
+    {
+        DontEnterCollider(contactPoint, contactPoint.normal);
+    }
+
+    public void SetPaddle(Side startingSide)
     {
         PaddleSide = startingSide;
-        CalculateBallOffsetBasedOnSide();
+
+        if(startingSide == Side.Right)
+        {
+            // Offset is based on the left paddle
+            ballHeldOffset.x *= -1;
+            // Spin the model around 180 degrees
+            Renderer renderer = GetComponentInChildren<Renderer>();
+            renderer.transform.rotation = Quaternion.Euler(Vector3.forward * 180);
+        }
     }
 
     public void SetHeldBall(Ball ball)
@@ -55,11 +85,11 @@ public class Paddle : MonoBehaviour
         if (IsBallHeld)
         {
             Vector3 direction = Vector3.zero;
-            if (PaddleSide == PaddleSide.Left)
+            if (PaddleSide == Side.Left)
             {
                 direction = Vector3.right;
             }
-            else if (PaddleSide == PaddleSide.Right)
+            else if (PaddleSide == Side.Right)
             {
                 direction = Vector3.left;
             }
@@ -78,14 +108,5 @@ public class Paddle : MonoBehaviour
 
         transform.Translate(Vector3.up * deltaYPos);
         //transform.position = new Vector3(transform.position.x, yPos, transform.position.z);
-    }
-
-    private void CalculateBallOffsetBasedOnSide()
-    {
-        // Offset is based on the left paddle
-        if (PaddleSide == PaddleSide.Right)
-        {
-            ballHeldOffset.x *= -1;
-        }
     }
 }
