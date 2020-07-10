@@ -89,7 +89,7 @@ public class LevelManager : MonoBehaviour
 
     private void GiveBall(Paddle paddle)
     {
-        ball.Stop();
+        ball.StopMoving();
         paddle.SetHeldBall(ball);
     }
 

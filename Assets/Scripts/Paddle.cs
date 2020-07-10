@@ -10,7 +10,6 @@ public class Paddle : MonoBehaviour
     private Vector3 ballHeldOffset = Vector3.right;
 
     private MovementData movementData;
-    private Collider myCollider;
 
     private Ball heldBall;
 
@@ -35,7 +34,6 @@ public class Paddle : MonoBehaviour
 
     private void Awake()
     {
-        myCollider = GetComponent<Collider>();
         movementData = GetComponent<MovementData>();
     }
 
@@ -49,15 +47,6 @@ public class Paddle : MonoBehaviour
         }
     }
 
-    private void DontEnterCollider(ContactPoint contactPoint, Vector3 normal)
-    {
-        Vector3 toTranslate = normal * (-1 * contactPoint.separation);
-        transform.Translate(toTranslate);
-    }
-    private void DontEnterCollider(ContactPoint contactPoint)
-    {
-        DontEnterCollider(contactPoint, contactPoint.normal);
-    }
 
     public void SetPaddle(Side startingSide)
     {
@@ -101,12 +90,19 @@ public class Paddle : MonoBehaviour
         }
     }
 
-    // Still iffy and should be done well
     public void MovePaddleVertically(float vertical)
     {
         float deltaYPos = vertical * Speed;
 
         transform.Translate(Vector3.up * deltaYPos);
-        //transform.position = new Vector3(transform.position.x, yPos, transform.position.z);
+    }
+    private void DontEnterCollider(ContactPoint contactPoint, Vector3 normal)
+    {
+        Vector3 toTranslate = normal * (-1 * contactPoint.separation);
+        transform.Translate(toTranslate);
+    }
+    private void DontEnterCollider(ContactPoint contactPoint)
+    {
+        DontEnterCollider(contactPoint, contactPoint.normal);
     }
 }
