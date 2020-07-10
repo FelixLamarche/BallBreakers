@@ -12,7 +12,7 @@ public class Goal : MonoBehaviour
         if (other.gameObject.layer == LayerManager.Ball)
         {
             // Only works with two goals on these sides
-            Side scorerSide = goalSide == Side.Left ? Side.Left : Side.Right;
+            Side scorerSide = goalSide == Side.Left ? Side.Right : Side.Left;
             GameplayManager.LevelManager.GoalScored(scorerSide);
         }
     }
