@@ -6,14 +6,10 @@ public class Goal : MonoBehaviour
 {
     [SerializeField] private Side goalSide = Side.Left;
 
-    private void OnTriggerEnter(Collider other)
+    public void GoalScored()
     {
-        // If a ball enters the goal
-        if (other.gameObject.layer == LayerManager.Ball)
-        {
-            // Only works with two goals on these sides
-            Side scorerSide = goalSide == Side.Left ? Side.Right : Side.Left;
-            GameplayManager.LevelManager.GoalScored(scorerSide);
-        }
+        // Inverse the goalSide to get the ScorerSide
+        Side scorerSide = goalSide == Side.Left ? Side.Right : Side.Left;
+        GameplayManager.LevelManager.GoalScored(scorerSide);
     }
 }

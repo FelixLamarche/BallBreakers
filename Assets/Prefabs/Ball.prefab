@@ -139,7 +139,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initialHorizontalSpeed: 10
-  maxSpeedComponents: {x: 11, y: 11, z: 0}
+  maxSpeedComponents: {x: 100, y: 100, z: 0}
+  currentSpeed: {x: 0, y: 0, z: 0}
 --- !u!54 &38171813
 Rigidbody:
   m_ObjectHideFlags: 0
