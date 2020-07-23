@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 2855543920207589846}
   - component: {fileID: 7980354905949980680}
   - component: {fileID: 8746225046337611089}
-  - component: {fileID: 1751206167213158629}
   m_Layer: 8
   m_Name: Paddle
   m_TagString: Player
@@ -61,7 +60,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb131049257e950428e6ba11d1f72b47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 10
+  baseSpeed: 10
 --- !u!54 &7980354905949980680
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -79,18 +78,6 @@ Rigidbody:
   m_Constraints: 126
   m_CollisionDetection: 0
 --- !u!114 &8746225046337611089
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8882924100647843142}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36f609c3290afe546aff8452c7b42195, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1751206167213158629
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

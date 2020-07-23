@@ -21,13 +21,12 @@ public class ComputerController : MonoBehaviour
         GetBallReference();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (isFollowingBall)
         {
             FollowBall();
         }
-
         if (paddle.IsBallHeld)
         {
             paddle.ShootBall();
@@ -36,8 +35,9 @@ public class ComputerController : MonoBehaviour
 
     private void FollowBall()
     {
-        float newYPos = ball.transform.position.y;
-        transform.position = new Vector3(transform.position.x, newYPos, transform.position.z);
+        float deltaY = ball.transform.position.y - transform.position.y;
+        Debug.Log(deltaY);
+        paddle.MovePaddleVerticalUnits(deltaY);
     }
 
     private void GetBallReference()

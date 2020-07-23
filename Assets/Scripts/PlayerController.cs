@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour
         if (verticalInputs.Count > 0)
         {
             float highestInput = verticalInputs.Max();
-            paddle.MovePaddleVertically(highestInput * Time.fixedDeltaTime);
+            paddle.Move(highestInput * Time.deltaTime);
             verticalInputs.Clear();
         }
     }

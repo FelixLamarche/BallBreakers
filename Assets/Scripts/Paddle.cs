@@ -1,15 +1,18 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(MovementData))]
 public class Paddle : MonoBehaviour
 {
-    [SerializeField] private float speed = 10f;
+    [SerializeField] private float baseSpeed = 10f;
 
     private Vector3 ballHeldOffset = Vector3.right;
+    private int layerMasksToCollide;
 
     private MovementData movementData;
+    private Collider myCollider;
 
     private Ball heldBall;
 
@@ -21,10 +24,10 @@ public class Paddle : MonoBehaviour
     {
         get { return heldBall != null; }
     }
-    public float Speed
+    public float CurrentSpeed
     {
-        get { return speed; }
-        private set { speed = value; }
+        get { return baseSpeed; }
+        private set { baseSpeed = value; }
     }
 
     public Vector3 WorldVelocity
@@ -34,19 +37,11 @@ public class Paddle : MonoBehaviour
 
     private void Awake()
     {
+        layerMasksToCollide = (1 << LayerManager.Default)  + (1 << LayerManager.Paddle) + (1 << LayerManager.Wall);
+
         movementData = GetComponent<MovementData>();
+        myCollider = GetComponent<Collider>();
     }
-
-    private void OnCollisionStay(Collision collision)
-    {
-        if (collision.collider.gameObject.layer == LayerManager.Wall)
-        {
-            ContactPoint contactPoint = collision.GetContact(0);
-            Wall wallComponent = contactPoint.otherCollider.GetComponent<Wall>();
-            DontEnterCollider(contactPoint, wallComponent.Normal);
-        }
-    }
-
 
     public void SetPaddle(Side startingSide)
     {
@@ -90,19 +85,26 @@ public class Paddle : MonoBehaviour
         }
     }
 
-    public void MovePaddleVertically(float vertical)
+    public void Move(float input)
     {
-        float deltaYPos = vertical * Speed;
+        MovePaddleVerticalUnits(input * CurrentSpeed);
+    }
 
-        transform.Translate(Vector3.up * deltaYPos);
-    }
-    private void DontEnterCollider(ContactPoint contactPoint, Vector3 normal)
+    public void MovePaddleVerticalUnits(float deltaVertical)
     {
-        Vector3 toTranslate = normal * (-1 * contactPoint.separation);
-        transform.Translate(toTranslate);
-    }
-    private void DontEnterCollider(ContactPoint contactPoint)
-    {
-        DontEnterCollider(contactPoint, contactPoint.normal);
+        Vector3 verticalDirection = deltaVertical >= 0 ? Vector3.up : Vector3.down;
+
+        // Get the point on the cubical collider where the raycast's origin will be
+        float raycastLength = Mathf.Abs(deltaVertical) + myCollider.bounds.extents.y;
+
+        RaycastHit raycastHit;
+        if (Physics.Raycast(transform.position, verticalDirection, out raycastHit, raycastLength, layerMasksToCollide))
+        {
+            transform.position = raycastHit.point - verticalDirection * myCollider.bounds.extents.y;
+        }
+        else
+        {
+            transform.Translate(Vector3.up * deltaVertical);
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 
 public class Ball : MonoBehaviour
 {
@@ -39,6 +40,13 @@ public class Ball : MonoBehaviour
         {
             Move(transform.position, Time.deltaTime);
         }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        Vector3 AddedVelocity = CalculateAddedVelocityCollision(collision.collider);
+        Vector3 reflectedSpeed = Vector3.Reflect(currentSpeed, collision.GetContact(0).normal);
+        SetCurrentSpeed(reflectedSpeed + AddedVelocity);
     }
 
     public void StopMoving()
@@ -92,14 +100,14 @@ public class Ball : MonoBehaviour
         // 7. Redo from step 1 with the new position, time and speed
 
         // Get the point on the cubical collider where the raycast's origin will be
-        Vector3 colliderVerticesPoint = GetPointOnTheCubeColliderFromCenterTowardsDirection(currentSpeed, Vector3.right);
-        Vector3 raycastStartPoint = currentPosition + colliderVerticesPoint;
+        Vector3 colliderVertexPoint = GetPointOnTheCubeColliderFromCenterTowardsDirection(currentSpeed, Vector3.right);
+        Vector3 raycastStartPoint = currentPosition + colliderVertexPoint;
         float distanceToTravel = currentSpeed.magnitude * timeTravelling;
 
         RaycastHit raycastHit;
         if (Physics.Raycast(raycastStartPoint, currentSpeed, out raycastHit, distanceToTravel, layerMasksToCollide))
         {
-            Vector3 newPosition = raycastHit.point - colliderVerticesPoint;
+            Vector3 newPosition = raycastHit.point - colliderVertexPoint;
             // The time remaining is based on the distance travelled with the currentSpeed
             float timeRemaining = timeTravelling * ((newPosition - currentPosition).magnitude / (currentSpeed * timeTravelling).magnitude);
 
