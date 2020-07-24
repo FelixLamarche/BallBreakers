@@ -40,23 +40,23 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    public void GoalScored(Side sideWhoScored)
+    public void GoalScored(Side sideWhoLost)
     {
-        Side paddleWhoLost = Side.Left;
-
-        if (sideWhoScored == Side.Left)
+        if (sideWhoLost == Side.Left)
         {
-            paddleWhoLost = Side.Right;
-            LeftPaddleScore++;
-        }
-        else if(sideWhoScored == Side.Right)
-        {
-            paddleWhoLost = Side.Left;
             RightPaddleScore++;
+        }
+        else if(sideWhoLost == Side.Right)
+        {
+            RightPaddleScore++;
+        }
+        else
+        {
+            Debug.LogError(sideWhoLost + " side who scored is Wrong");
         }
         OnScoreChanged();
 
-        SetRound(paddleWhoLost);
+        SetRound(sideWhoLost);
     }
 
     private void SetRound(Side sideWithBall)

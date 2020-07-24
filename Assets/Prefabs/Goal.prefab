@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6377408631121860382}
   - component: {fileID: 6882455517306333267}
   m_Layer: 0
-  m_Name: LeftPaddle Goal
+  m_Name: Goal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -57,3 +57,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5dbccd0b8d873bc4796caaa853c37945, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  goalSide: 2

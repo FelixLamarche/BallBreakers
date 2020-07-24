@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 // Class that is responsible to keep track of all the other managers
 // and the general information unrelated to a specific scene
@@ -13,10 +14,35 @@ public class GameplayManager : MonoBehaviour
 
     private void Awake()
     {
-        DontDestroyOnLoad(gameObject);
+        if (FindObjectsOfType<GameplayManager>().Length == 1)
+        {
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
 
         // Called here for now, until multiple scenes are implemented
         OnSceneLoaded();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKey(KeyCode.Escape))
+        {
+            SceneManager.LoadScene("MainMenu");
+        }
+    }
+
+    public void LoadGameplayScene()
+    {
+        SceneManager.LoadScene("GameplayScene");
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 
     // Call this when implementing multiple scenes

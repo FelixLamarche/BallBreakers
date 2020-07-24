@@ -9,7 +9,6 @@ public class Goal : MonoBehaviour
     public void GoalScored()
     {
         // Inverse the goalSide to get the ScorerSide
-        Side scorerSide = goalSide == Side.Left ? Side.Right : Side.Left;
-        GameplayManager.LevelManager.GoalScored(scorerSide);
+        GameplayManager.LevelManager.GoalScored(goalSide);
     }
 }

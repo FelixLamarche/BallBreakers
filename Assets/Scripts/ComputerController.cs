@@ -36,7 +36,6 @@ public class ComputerController : MonoBehaviour
     private void FollowBall()
     {
         float deltaY = ball.transform.position.y - transform.position.y;
-        Debug.Log(deltaY);
         paddle.MovePaddleVerticalUnits(deltaY);
     }
 
