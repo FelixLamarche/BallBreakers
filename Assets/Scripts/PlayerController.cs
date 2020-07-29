@@ -7,6 +7,11 @@ using UnityEngine;
 [RequireComponent(typeof(Paddle))]
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] private KeyCode upKey = KeyCode.W;
+    [SerializeField] private KeyCode downKey = KeyCode.S;
+    [SerializeField] private KeyCode shootKey = KeyCode.D;
+    [SerializeField] private KeyCode dashKey = KeyCode.LeftShift;
+
     private List<float> verticalInputs;
     private Paddle paddle;
 
@@ -20,6 +25,11 @@ public class PlayerController : MonoBehaviour
     {
         GetVerticalInputs();
         GetShootingInput();
+
+        if (Input.GetKeyDown(dashKey) && !paddle.IsDashing)
+        {
+            paddle.ActivateDash();
+        }
     }
 
     private void FixedUpdate()
@@ -35,7 +45,15 @@ public class PlayerController : MonoBehaviour
 
     private void GetVerticalInputs()
     {
-        float vInput = Input.GetAxis("Vertical");
+        float vInput = 0;
+        if (Input.GetKey(upKey))
+        {
+            vInput = 1;
+        }
+        else if (Input.GetKey(downKey))
+        {
+            vInput = -1;
+        }
 
         if (vInput != 0)
         {
@@ -45,7 +63,7 @@ public class PlayerController : MonoBehaviour
 
     private void GetShootingInput()
     {
-        if (Input.GetButtonDown("Shoot") && paddle.IsBallHeld)
+        if (Input.GetKeyDown(shootKey) && paddle.IsBallHeld)
         {
             paddle.ShootBall();
         }

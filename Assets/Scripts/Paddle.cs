@@ -7,6 +7,9 @@ using UnityEngine;
 public class Paddle : MonoBehaviour
 {
     [SerializeField] private float baseSpeed = 10f;
+    [SerializeField] private Vector3 velocityTransferRates = Vector3.one;
+    [SerializeField] private float dashLength = 1f;
+    [SerializeField] private float dashDuration = 0.25f;
 
     private Vector3 ballHeldOffset = Vector3.right;
     private int layerMasksToCollide;
@@ -24,6 +27,10 @@ public class Paddle : MonoBehaviour
     {
         get { return heldBall != null; }
     }
+    public bool IsDashing
+    {
+        get; private set;
+    }
     public float CurrentSpeed
     {
         get { return baseSpeed; }
@@ -38,6 +45,7 @@ public class Paddle : MonoBehaviour
     private void Awake()
     {
         layerMasksToCollide = (1 << LayerManager.Default)  + (1 << LayerManager.Paddle) + (1 << LayerManager.Wall);
+        IsDashing = false;
 
         movementData = GetComponent<MovementData>();
         myCollider = GetComponent<Collider>();
@@ -106,5 +114,37 @@ public class Paddle : MonoBehaviour
         {
             transform.Translate(Vector3.up * deltaVertical);
         }
+    }
+
+    public Vector3 CalculateTransferedVelocity()
+    {
+        Vector3 transferedVelocity = new Vector3(velocityTransferRates.x * WorldVelocity.magnitude,
+                                                 velocityTransferRates.y * WorldVelocity.magnitude,
+                                                 velocityTransferRates.z * WorldVelocity.magnitude);
+        return transferedVelocity;
+    }
+
+    public void ActivateDash()
+    {
+        float dashDirection = 1;
+        if(WorldVelocity.y < 0)
+        {
+            dashDirection = -1;
+        }
+        IsDashing = true;
+        StartCoroutine(DashCoroutine(dashDirection * dashLength, dashDuration));
+    }
+
+    private IEnumerator DashCoroutine(float dashLength, float dashDuration)
+    {
+        float u = 0f;
+        Vector3 dashPosition = Vector3.up * dashLength;
+        do
+        {
+            Vector3.Lerp(Vector3.zero, dashPosition, u);
+            yield return null;
+            u += Time.deltaTime / dashDuration;
+        } while (u <= 1);
+        IsDashing = false;
     }
 }

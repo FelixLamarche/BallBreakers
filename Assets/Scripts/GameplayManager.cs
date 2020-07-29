@@ -58,7 +58,7 @@ public class GameplayManager : MonoBehaviour
         // FOR NOW : Do nothing if there is no Level Manager
         if(levelManagers.Length == 0)
         {
-            Debug.LogWarning("No LevelManager here");
+            Debug.LogWarning("No LevelManager found");
             LevelManager = null;
             return;
         }

@@ -43,7 +43,7 @@ public class Ball : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Vector3 AddedVelocity = CalculateAddedVelocityCollision(collision.collider);
+        Vector3 AddedVelocity = GetCollisionAddedVelocity(collision.collider);
         Vector3 reflectedSpeed = Vector3.Reflect(currentSpeed, collision.GetContact(0).normal);
         SetCurrentSpeed(reflectedSpeed + AddedVelocity);
     }
@@ -113,9 +113,12 @@ public class Ball : MonoBehaviour
             CheckForGoal(raycastHit.collider);
 
             // Set the new currentSpeed
-            Vector3 AddedVelocity = CalculateAddedVelocityCollision(raycastHit.collider);
+            Vector3 AddedVelocity = GetCollisionAddedVelocity(raycastHit.collider);
             Vector3 reflectedSpeed = Vector3.Reflect(currentSpeed, raycastHit.normal);
-            SetCurrentSpeed(reflectedSpeed + AddedVelocity);
+            Vector3 newSpeed = new Vector3(reflectedSpeed.x + Mathf.Sign(reflectedSpeed.x) * 0.2f * AddedVelocity.magnitude , 
+                                           reflectedSpeed.y +  0.2f * AddedVelocity.magnitude, 
+                                           0);
+            SetCurrentSpeed(newSpeed);
 
             Move(newPosition, timeRemaining);
         }
@@ -127,15 +130,14 @@ public class Ball : MonoBehaviour
         }
     }
 
-    private Vector3 CalculateAddedVelocityCollision(Collider collider)
+    private Vector3 GetCollisionAddedVelocity(Collider collider)
     {
-        MovementData colliderMovementData = collider.GetComponent<MovementData>();
+        Paddle paddleCollided = collider.GetComponent<Paddle>();
         Vector3 AddedVelocity = Vector3.zero;
-        if (colliderMovementData != null)
+        if (paddleCollided != null)
         {
-            AddedVelocity = colliderMovementData.WorldVelocity;
+            AddedVelocity = paddleCollided.CalculateTransferedVelocity();
         }
-
         return AddedVelocity;
     }
 

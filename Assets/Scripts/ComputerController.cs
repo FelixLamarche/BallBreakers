@@ -6,7 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(Paddle))]
 public class ComputerController : MonoBehaviour
 {
-    [SerializeField] private bool isFollowingBall = false;
+    [SerializeField] private bool isFollowingBall = true;
 
     private Paddle paddle;
     private Ball ball;
