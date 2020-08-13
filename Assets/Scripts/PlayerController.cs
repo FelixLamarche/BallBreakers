@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -26,9 +27,10 @@ public class PlayerController : MonoBehaviour
         GetVerticalInputs();
         GetShootingInput();
 
-        if (Input.GetKeyDown(dashKey) && !paddle.IsDashing)
+        if (Input.GetKeyDown(dashKey))
         {
-            paddle.ActivateDash();
+            Side dashDirection = Input.GetKey(downKey) ? Side.Down : Side.Up;
+            paddle.ActivateDash(dashDirection);
         }
     }
 
@@ -63,7 +65,7 @@ public class PlayerController : MonoBehaviour
 
     private void GetShootingInput()
     {
-        if (Input.GetKeyDown(shootKey) && paddle.IsBallHeld)
+        if (Input.GetKeyDown(shootKey))
         {
             paddle.ShootBall();
         }

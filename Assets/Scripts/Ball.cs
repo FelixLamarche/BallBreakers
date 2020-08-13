@@ -7,7 +7,7 @@ public class Ball : MonoBehaviour
     [SerializeField] private float initialHorizontalSpeed = 5f;
     [SerializeField] private Vector3 maxSpeedComponents = Vector3.one;
 
-    private int layerMasksToCollide;
+    private int layerMasksColliding;
     private Vector3 paddleBallOffset;
     private Collider myCollider;
 
@@ -21,7 +21,7 @@ public class Ball : MonoBehaviour
     {
         isMoving = false;
         currentSpeed = Vector3.zero;
-        layerMasksToCollide = (1 << LayerManager.Default) + (1 << LayerManager.Ball) + (1 << LayerManager.Paddle) + (1 << LayerManager.Wall);
+        layerMasksColliding = (1 << LayerManager.Default) + (1 << LayerManager.Ball) + (1 << LayerManager.Paddle) + (1 << LayerManager.Wall);
         myCollider = GetComponent<Collider>();
     }
 
@@ -104,7 +104,7 @@ public class Ball : MonoBehaviour
         float distanceToTravel = currentSpeed.magnitude * timeTravelling;
 
         RaycastHit raycastHit;
-        if (Physics.Raycast(raycastStartPoint, currentSpeed, out raycastHit, distanceToTravel, layerMasksToCollide))
+        if (Physics.Raycast(raycastStartPoint, currentSpeed, out raycastHit, distanceToTravel, layerMasksColliding))
         {
             Vector3 newPosition = raycastHit.point - colliderVertexPoint;
             // The time remaining is based on the distance travelled with the currentSpeed

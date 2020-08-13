@@ -48,7 +48,7 @@ public class LevelManager : MonoBehaviour
         }
         else if(sideWhoLost == Side.Right)
         {
-            RightPaddleScore++;
+            LeftPaddleScore++;
         }
         else
         {
@@ -115,7 +115,7 @@ public class LevelManager : MonoBehaviour
         paddleObject.name = objectName;
 
         Paddle paddle = paddleObject.GetComponent<Paddle>();
-        paddle.SetPaddle(paddleSide);
+        paddle.SetPaddleSide(paddleSide);
 
         if (isPlayer)
         {

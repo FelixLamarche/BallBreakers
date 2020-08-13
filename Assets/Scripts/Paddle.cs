@@ -8,11 +8,13 @@ public class Paddle : MonoBehaviour
 {
     [SerializeField] private float baseSpeed = 10f;
     [SerializeField] private Vector3 velocityTransferRates = Vector3.one;
-    [SerializeField] private float dashLength = 1f;
-    [SerializeField] private float dashDuration = 0.25f;
+    [Header("Dash")]
+    [SerializeField] private float dashDistance = 1f;
+    [SerializeField] private float dashSpeed = 15f;
 
     private Vector3 ballHeldOffset = Vector3.right;
-    private int layerMasksToCollide;
+    private int layerMasksColliding;
+    private bool isDashing;
 
     private MovementData movementData;
     private Collider myCollider;
@@ -27,10 +29,6 @@ public class Paddle : MonoBehaviour
     {
         get { return heldBall != null; }
     }
-    public bool IsDashing
-    {
-        get; private set;
-    }
     public float CurrentSpeed
     {
         get { return baseSpeed; }
@@ -44,14 +42,14 @@ public class Paddle : MonoBehaviour
 
     private void Awake()
     {
-        layerMasksToCollide = (1 << LayerManager.Default)  + (1 << LayerManager.Paddle) + (1 << LayerManager.Wall);
-        IsDashing = false;
+        layerMasksColliding = (1 << LayerManager.Default)  + (1 << LayerManager.Paddle) + (1 << LayerManager.Wall);
+        isDashing = false;
 
         movementData = GetComponent<MovementData>();
         myCollider = GetComponent<Collider>();
     }
 
-    public void SetPaddle(Side startingSide)
+    public void SetPaddleSide(Side startingSide)
     {
         PaddleSide = startingSide;
 
@@ -106,7 +104,7 @@ public class Paddle : MonoBehaviour
         float raycastLength = Mathf.Abs(deltaVertical) + myCollider.bounds.extents.y;
 
         RaycastHit raycastHit;
-        if (Physics.Raycast(transform.position, verticalDirection, out raycastHit, raycastLength, layerMasksToCollide))
+        if (Physics.Raycast(transform.position, verticalDirection, out raycastHit, raycastLength, layerMasksColliding))
         {
             transform.position = raycastHit.point - verticalDirection * myCollider.bounds.extents.y;
         }
@@ -124,27 +122,52 @@ public class Paddle : MonoBehaviour
         return transferedVelocity;
     }
 
-    public void ActivateDash()
+    public void ActivateDash(Side direction)
     {
-        float dashDirection = 1;
-        if(WorldVelocity.y < 0)
+        if (!isDashing)
         {
-            dashDirection = -1;
+            int dashDirection = 1;
+            if(direction == Side.Down)
+            {
+                dashDirection = -1;
+            }
+
+            isDashing = true;
+            StartCoroutine(DashCoroutine(dashDistance, dashSpeed, dashDirection));
         }
-        IsDashing = true;
-        StartCoroutine(DashCoroutine(dashDirection * dashLength, dashDuration));
     }
 
-    private IEnumerator DashCoroutine(float dashLength, float dashDuration)
+    private IEnumerator DashCoroutine(float dashDistance, float dashSpeed, int dashDirection)
     {
-        float u = 0f;
-        Vector3 dashPosition = Vector3.up * dashLength;
-        do
+        //float u = 0f;
+        //Vector3 dashPosition = Vector3.up * dashLength;
+        //do
+        //{
+        //    Vector3.Lerp(Vector3.zero, dashPosition, u);
+        //    yield return null;
+        //    u += Time.deltaTime / dashDuration;
+        //} while (u <= 1);
+
+        float dashDistanceDone = 0;
+
+        while (true)
         {
-            Vector3.Lerp(Vector3.zero, dashPosition, u);
-            yield return null;
-            u += Time.deltaTime / dashDuration;
-        } while (u <= 1);
-        IsDashing = false;
+            float distanceToMove = dashSpeed * Time.deltaTime;
+
+            if (distanceToMove > dashDistance - dashDistanceDone)
+            {
+                distanceToMove = dashDistance - dashDistanceDone;
+            }
+
+            MovePaddleVerticalUnits(distanceToMove * dashDirection);
+            dashDistanceDone += distanceToMove;
+
+            if(dashDistance == dashDistanceDone)
+            {
+                break;
+            }
+            yield return new WaitForFixedUpdate();
+        }
+        isDashing = false;
     }
 }
